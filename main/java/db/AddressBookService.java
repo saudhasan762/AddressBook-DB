@@ -6,6 +6,11 @@ public class AddressBookService {
     private List<Contact> contactList;
     private final AddressBookDBService addressBookDBService;
 
+    public boolean checkAddressBookInSyncWithDB(String name) {
+        List<Contact> contactList = addressBookDBService.getAddressBookData(name);
+        return contactList.get(0).equals(getAddressBookData(name));
+    }
+
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
     public AddressBookService(List<Contact> contactList){
@@ -22,4 +27,20 @@ public class AddressBookService {
             this.contactList = addressBookDBService.readData();
         return this.contactList;
     }
+
+    public void updateContactAddress(String firstname, String address) {
+        int result = addressBookDBService.updateAddressBookData(firstname,address);
+        if (result == 0) return;
+        Contact contact = this.getAddressBookData(firstname);
+        if (contact != null) contact.address = address;
+    }
+
+    private Contact getAddressBookData(String name) {
+        return this.contactList.stream()
+                .filter(addressBookDataItem -> addressBookDataItem.first.equals(name) )
+                .findFirst()
+                .orElse(null);
+    }
+
+
 }

@@ -1,14 +1,16 @@
 package db;
 
+import java.util.Objects;
+
 public class Contact {
-    private String first;
-    private String last;
-    private String address;
-    private String city;
-    private String state;
-    private int zip;
-    private int phoneNumber;
-    private String email;
+    public String first;
+    public String last;
+    public String address;
+    public String city;
+    public String state;
+    public int zip;
+    public int phoneNumber;
+    public String email;
 
 
     Contact(String first, String last, String address, String city, String state,int zip, int phoneNumber, String email ){
@@ -35,4 +37,16 @@ public class Contact {
                 ", email=" + email + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contact contact = (Contact) o;
+        return zip == contact.zip && phoneNumber == contact.phoneNumber &&
+                Objects.equals(first, contact.first) && Objects.equals(last, contact.last) &&
+                Objects.equals(address, contact.address) && Objects.equals(city, contact.city) &&
+                Objects.equals(state, contact.state) && Objects.equals(email, contact.email);
+    }
+
 }
