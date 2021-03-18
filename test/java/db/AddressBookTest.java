@@ -33,4 +33,14 @@ public class AddressBookTest {
         List<Contact> contactList = addressBookService.readAddressBookDataForDateRange(AddressBookService.IOService.DB_IO,startDate,endDate);
         Assertions.assertEquals(3,contactList.size());
     }
+
+    @Test
+    public void givenAddressBook_WhenRetrievedByCityOrState_ShouldMatchContact(){
+        AddressBookService addressBookService = new AddressBookService();
+        addressBookService.readAddressBookData(AddressBookService.IOService.DB_IO);
+        String city = "Jaipur";
+        String state = "Uttrakhand";
+        List<Contact> contactList = addressBookService.readAddressBookDataForCityOrState(AddressBookService.IOService.DB_IO,city,state);
+        Assertions.assertEquals(3,contactList.size());
+    }
 }

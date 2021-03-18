@@ -107,4 +107,9 @@ public class AddressBookDBService {
         String sql = String.format("SELECT * FROM address_book WHERE start BETWEEN '%s' and '%s';",Date.valueOf(startDate),Date.valueOf(endDate));
         return this.getAddressBookDataUsingDB(sql);
     }
+
+    public List<Contact> getContactForCityOrState(String city, String state) {
+        String sql = String.format("SELECT * FROM address_book WHERE city = '%s' OR state = '%s';",city,state);
+        return this.getAddressBookDataUsingDB(sql);
+    }
 }

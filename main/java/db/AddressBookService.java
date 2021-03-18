@@ -18,6 +18,12 @@ public class AddressBookService {
         return this.contactList;
     }
 
+    public List<Contact> readAddressBookDataForCityOrState(IOService ioService, String city, String state) {
+        if(ioService.equals(IOService.DB_IO))
+            this.contactList = addressBookDBService.getContactForCityOrState(city,state);
+        return this.contactList;
+    }
+
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
     public AddressBookService(List<Contact> contactList){
