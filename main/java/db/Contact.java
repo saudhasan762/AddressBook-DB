@@ -56,4 +56,8 @@ public class Contact {
                 Objects.equals(state, contact.state) && Objects.equals(email, contact.email);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, last, address, city, state, zip, phoneNumber, email, startDate);
+    }
 }
