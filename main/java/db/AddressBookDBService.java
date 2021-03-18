@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,5 +101,10 @@ public class AddressBookDBService {
         } catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public List<Contact> getContactForDateRange(LocalDate startDate, LocalDate endDate) {
+        String sql = String.format("SELECT * FROM address_book WHERE start BETWEEN '%s' and '%s';",Date.valueOf(startDate),Date.valueOf(endDate));
+        return this.getAddressBookDataUsingDB(sql);
     }
 }
