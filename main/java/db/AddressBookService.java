@@ -24,6 +24,10 @@ public class AddressBookService {
         return this.contactList;
     }
 
+    public void addContactToBook(String firstName, String lastName, String address, String city, String state, int zip, int phoneNumber, String email, LocalDate startDate) {
+        contactList.add(addressBookDBService.addContactToBook(firstName,lastName,address,city,state,zip,phoneNumber,email,startDate));
+    }
+
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
     public AddressBookService(List<Contact> contactList){

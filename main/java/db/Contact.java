@@ -1,5 +1,6 @@
 package db;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Contact {
@@ -11,6 +12,7 @@ public class Contact {
     public int zip;
     public int phoneNumber;
     public String email;
+    public LocalDate startDate;
 
 
     Contact(String first, String last, String address, String city, String state,int zip, int phoneNumber, String email ){
@@ -22,6 +24,11 @@ public class Contact {
         this.zip = zip;
         this.phoneNumber = phoneNumber;
         this.email = email;
+    }
+
+    public Contact(String first, String last, String address, String city, String state, int zip, int phoneNumber, String email, LocalDate startDate) {
+        this(first,last,address,city,state,zip,phoneNumber,email);
+        this.startDate = startDate;
     }
 
     @Override
