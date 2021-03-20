@@ -1,7 +1,11 @@
 package db;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.google.gson.Gson;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -15,7 +19,7 @@ public class AddressBookTest {
     public void givenAddressBookInDB_WhenRetrieved_ShouldMatchEmployeeCount(){
         AddressBookService addressBookService = new AddressBookService();
         List<Contact> contactList = addressBookService.readAddressBookData(AddressBookService.IOService.DB_IO);
-        Assertions.assertEquals(3, contactList.size());
+        Assert.assertEquals(3, contactList.size());
     }
 
     @Test
@@ -24,7 +28,7 @@ public class AddressBookTest {
         List<Contact> contactList = addressBookService.readAddressBookData(AddressBookService.IOService.DB_IO);
         addressBookService.updateContactAddress("Saud","Clement Town");
         boolean result = addressBookService.checkAddressBookInSyncWithDB("Saud");
-        Assertions.assertTrue(result);
+        Assert.assertTrue(result);
     }
 
     @Test
@@ -34,7 +38,7 @@ public class AddressBookTest {
         LocalDate startDate = LocalDate.of(2018,1,1);
         LocalDate endDate = LocalDate.now();
         List<Contact> contactList = addressBookService.readAddressBookDataForDateRange(AddressBookService.IOService.DB_IO,startDate,endDate);
-        Assertions.assertEquals(3,contactList.size());
+        Assert.assertEquals(3,contactList.size());
     }
 
     @Test
@@ -44,7 +48,7 @@ public class AddressBookTest {
         String city = "Jaipur";
         String state = "Uttrakhand";
         List<Contact> contactList = addressBookService.readAddressBookDataForCityOrState(AddressBookService.IOService.DB_IO,city,state);
-        Assertions.assertEquals(3,contactList.size());
+        Assert.assertEquals(3,contactList.size());
     }
 
     @Test
@@ -53,7 +57,7 @@ public class AddressBookTest {
         addressBookService.readAddressBookData(AddressBookService.IOService.DB_IO);
         addressBookService.addContactToBook("Amit","Kumar","Subhash Nagar", "Lucknow", "UP",456556, 569845125,"amitK@gmail.com",LocalDate.now());
         boolean result = addressBookService.checkAddressBookInSyncWithDB("Amit");
-        Assertions.assertTrue(result);
+        Assert.assertTrue(result);
     }
 
     @Test
@@ -72,6 +76,30 @@ public class AddressBookTest {
         addressBookService.addContactToBookWithThreads(Arrays.asList(arrayOfEmp));
         Instant threadEnd = Instant.now();
         System.out.println("Duration with Thread: "+Duration.between(threadStart, threadEnd));
-        Assertions.assertEquals(9,addressBookService.countEntries(AddressBookService.IOService.DB_IO));
+        Assert.assertEquals(9,addressBookService.countEntries(AddressBookService.IOService.DB_IO));
     }
+
+    @Before
+    public void setup() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = 3000;
+    }
+
+    public Contact[] getContactList() {
+        Response response = RestAssured.get("/address_book");
+        System.out.println("CONTACT ENTRIES IN JSONServer:\n" + response.asString());
+        Contact[] arrayOfContact = new Gson().fromJson(response.asString(), Contact[].class);
+        return arrayOfContact;
+    }
+
+    @Test
+    public void givenAddressBookInJsonServer_WhenRetrieved_ShouldMatchTheCount() {
+        Contact[] arrayOfContact = getContactList();
+        AddressBookService addressBookService;
+        addressBookService = new AddressBookService(Arrays.asList(arrayOfContact));
+        long entries = addressBookService.countEntries(AddressBookService.IOService.REST_IO);
+        Assert.assertEquals(2, entries);
+    }
+
+
 }
